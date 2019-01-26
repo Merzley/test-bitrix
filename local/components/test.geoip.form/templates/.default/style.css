@@ -1,0 +1,108 @@
+.geo-ip-layout{
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+}
+
+.geo-ip-wrapper{
+    padding: 40px;
+}
+
+.geo-ip-title{
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.53125rem;
+    font-family: inherit;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #4a4a4a;
+    text-transform: uppercase;
+}
+
+.geo-ip-input{
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: inherit;
+    line-height: inherit;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 2px solid #ced4da;
+    border-radius: 4px;
+    overflow: visible;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.geo-ip-input:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #009688;
+    outline: 0;
+    box-shadow: none;
+}
+
+.geo-ip-input.invalid{
+    color: #811e25;
+    border-color: #d90422;
+}
+
+.geo-ip-button{
+    cursor: pointer;
+    display: block;
+    width: 50%;
+    color: #fff;
+    background-color: #009688;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 2px solid #009688;
+    padding: .375rem .75rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: 3px;
+    margin: 20px auto auto auto;
+}
+
+.geo-ip-button:not([disabled]):hover{
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,.4);
+    transform: translate3d(0,-1px,0);
+    cursor: pointer;
+    color: #fff;
+    background-color: #007065;
+    border-color: #00635a;
+}
+
+.geo-ip-button:active{
+    color: #fff;
+    background-color: #00635a;
+    border-color: #00564e;
+}
+
+.geo-ip-button:disabled{
+    color: #fff;
+    background-color: #009688;
+    border-color: #009688;
+    opacity: .65;
+    cursor: not-allowed;
+}
+
+.geo-ip-result-wrapper{
+    overflow: hidden;
+    padding: .75rem .75rem 0 .75rem;
+}
+
+.geo-ip-result-wrapper.closed{
+    display: none;
+    height: 0;
+}
+
+.geo-ip-result{
+    font-size: 1.3rem;
+}
