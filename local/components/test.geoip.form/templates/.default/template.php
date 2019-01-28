@@ -1,3 +1,6 @@
+<?php
+CJSCore::Init(array('ajax'));
+?>
 <div class="geo-ip-layout js-geo-ip-layout">
     <div class="geo-ip-wrapper">
         <div class="geo-ip-title">
