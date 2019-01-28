@@ -5,7 +5,9 @@ class GeoIpAjax extends \CBitrixComponent implements Controllerable {
     const CACHE_TIME = 10; //секунд
     const CACHE_ID_PREFIX = 'GEO_API_AJAX_';
 
-    public function configureActions(){}
+    public function configureActions(){
+        return ['getGeoIp' => ['prefilters' => []]];
+    }
 
     /**
      * @param string $ip
