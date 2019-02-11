@@ -1,98 +1,28 @@
 <?php
+declare(strict_types = 1);
+
 use Bitrix\Main\Engine\Contract\Controllerable;
 
 class GeoIpAjax extends \CBitrixComponent implements Controllerable {
-    const CACHE_TIME = 10; //секунд
-    const CACHE_ID_PREFIX = 'GEO_API_AJAX_';
-
     public function configureActions(){
         return ['getGeoIp' => ['prefilters' => []]];
     }
 
     /**
      * @param string $ip
+     * @param int $service_id
      * @return string JSON
-     *
-     * ФОРМАТ ОТВЕТА
-     *{
-     * success: bool,      Удалось ли получить данные по IP
-     * error:   string,    Строка с ошибкой. Если ошибок нет - данного ключа в ответе не будет
-     * data:    array      Собсвтенно, массив c данными по IP
-     *}
+     * @throws Exception
      */
-    public function getGeoIpAction(string $ip){
-        //Проверяем пришедший IP на валидность
-        if (!$this->isValidIp($ip)) {
-            return json_encode([
-                'success' => false,
-                'error' => 'Invalid IP address',
-                'data' => []
-            ]);
-        }
+    public function getGeoIpAction(string $ip, int $service_id){
+        $objGeoIpFactory = new \Local\GeoIp\GeoIpFactory();
+        $objGeoIpService = $objGeoIpFactory->makeService($service_id);
 
-        //Получаем данные по IP
-        $objCacheEngine = new CPHPCache;
-        $strCacheId = self::CACHE_ID_PREFIX . $ip;
-        try {
-            if ($objCacheEngine->StartDataCache(self::CACHE_TIME, $strCacheId)) {
-                //Либо забираем у стороннего сервиса и кешируем
-                $arResult = $this->processSoapRequest($ip);
-                $objCacheEngine->EndDataCache($arResult);
+        if ($objGeoIpService == null)
+            throw new Exception('Unknown GeoIp service type');
 
-            } else {
-                //Либо берем закешированное
-                $arResult = $objCacheEngine->GetVars();
-            }
-        }
-        catch (Exception $e){
-            return json_encode([
-                'success' => false,
-                'error' => $e,
-                'data' => []
-            ]);
-        }
+        $objResponse = $objGeoIpService->getGeoData($ip);
 
-        return json_encode([
-            'success' => true,
-            'data' => $arResult
-        ]);
-    }
-
-    /**
-     * @param string $ip
-     * @return bool
-     *
-     * Валидатор IP адреса
-     */
-    private function isValidIp(string $ip){
-        $arOctets = explode('.', $ip);
-
-        if (count($arOctets) !== 4)
-            return false;
-
-        foreach ($arOctets as $strOctets){
-            if ($strOctets == '')
-                return false;
-
-            if (intval($strOctets) > 255)
-                return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param string $ip
-     * @return array
-     *
-     * Заглушка для доступа к недоступному сейчас сервису
-     */
-    private function processSoapRequest(string $ip){
-        return [
-            'first' => 'Какая-то',
-            'second' => 'информация по IP '.$ip.'.',
-            'third' => 'Рандомное число для проверки кеширования: ',
-            'fourth' => rand(1, 1000).' ('.self::CACHE_TIME.' секунд)'
-        ];
+        return json_encode(get_object_vars($objResponse));
     }
 }

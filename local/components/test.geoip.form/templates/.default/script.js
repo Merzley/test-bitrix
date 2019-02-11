@@ -145,7 +145,10 @@ function processComponentLogic(domComponentRoot){
                 'test.geoip.ajax',
                 'getGeoIp', {
                     mode: 'class',
-                    data: {ip: strValidIp},
+                    data: {
+                        ip: strValidIp,
+                        service_id: 1
+                    },
                 }
             )
             .then((response) => {
@@ -177,14 +180,14 @@ function processComponentLogic(domComponentRoot){
                     return reject();
                 }
 
-                if (parsedResponseData.success !== true) {
+                if (parsedResponseData.bIsSuccess !== true) {
                     console.log('Error. Server can\'t receive geo-ip data');
                     console.log(response);
                     return reject();
                 }
 
                 //Возвращаем распакованные данные по IP-адресу
-                return resolve(parsedResponseData.data);
+                return resolve(parsedResponseData);
             })
             .catch((response)=>{
                 if (!isValidAjaxResponse(response))
@@ -208,23 +211,47 @@ function processComponentLogic(domComponentRoot){
 
     function isValidAjaxResponseData(responseData){
         return ((typeof responseData === 'object') &&
-                ('success' in responseData) &&
-                ('data' in responseData) &&
-                ('first' in responseData.data) &&
-                ('second' in responseData.data) &&
-                ('third' in responseData.data) &&
-                ('fourth' in responseData.data)
+                ('bIsSuccess' in responseData) &&
+                ('strErrorMessage' in responseData) &&
+                ('strCountry' in responseData) &&
+                ('strRegion' in responseData) &&
+                ('strCity' in responseData) &&
+                ('fLatitude' in responseData) &&
+                ('fLongitude' in responseData)
                );
     }
 
     //Обработчики показа результатов работы сервиса
-    //Заглушки
     function showDataFromServer(objDataFromServer){
-        domResult.textContent =
-            objDataFromServer.first + ' ' +
-            objDataFromServer.second + ' ' +
-            objDataFromServer.third + ' ' +
-            objDataFromServer.fourth;
+        while(domResult.firstChild)
+        domResult.removeChild(domResult.firstChild);
+
+        for (let prop in objDataFromServer) if (objDataFromServer.hasOwnProperty(prop)){
+            if (objDataFromServer[prop] == null)
+                objDataFromServer[prop] = 'нет данных';
+        }
+
+        let domElement;
+
+        domElement = document.createElement('div');
+        domElement.textContent = 'Страна: '+objDataFromServer.strCountry;
+        domResult.appendChild(domElement);
+
+        domElement = document.createElement('div');
+        domElement.textContent = 'Регион: '+objDataFromServer.strRegion;
+        domResult.appendChild(domElement);
+
+        domElement = document.createElement('div');
+        domElement.textContent = 'Населенный пункт: '+objDataFromServer.strCity;
+        domResult.appendChild(domElement);
+
+        domElement = document.createElement('div');
+        domElement.textContent = 'Широта: '+objDataFromServer.fLatitude;
+        domResult.appendChild(domElement);
+
+        domElement = document.createElement('div');
+        domElement.textContent = 'Долгота: '+objDataFromServer.fLongitude;
+        domResult.appendChild(domElement);
     }
     function showErrorMessage(){
         domResult.textContent = 'Не удалось получить данные по данному IP';

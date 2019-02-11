@@ -14,8 +14,10 @@ CJSCore::Init(array('ajax'));
             >
         </div>
 
-        <div class="geo-ip-result-wrapper js-geo-ip-result-wrapper closed">
-            <div class="geo-ip-result js-geo-ip-result"></div>
+        <div class="geo-ip-result-wrapper js-geo-ip-result-wrapper">
+            <div class="geo-ip-result js-geo-ip-result">
+
+            </div>
         </div>
 
         <button type="button"
